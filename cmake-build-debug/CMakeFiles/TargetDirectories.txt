@@ -1,3 +1,0 @@
-/Users/mikolajskawinski/Documents/CLionProjects/ss-cover/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Users/mikolajskawinski/Documents/CLionProjects/ss-cover/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/mikolajskawinski/Documents/CLionProjects/ss-cover/cmake-build-debug/CMakeFiles/ss_cover.dir
