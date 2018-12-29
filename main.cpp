@@ -2,11 +2,10 @@
 #include <leptonica/allheaders.h>
 #include <memory>
 #include <iostream>
-#include "util.hpp"
+#include <functional>
 
-template<>
-void annihilate<Pix>(Pix *ptr)
-{ pixDestroy(&ptr); }
+template<typename T>
+using deleted_unique_ptr = std::unique_ptr<T, std::function<void(T *)>>;
 
 int main()
 {
@@ -19,7 +18,7 @@ int main()
     }
 
     // Open input image with leptonica library
-    std::unique_ptr<Pix, Annihilator<Pix>> image{pixRead("phototest.tif")};
+    deleted_unique_ptr<Pix> image{pixRead("phototest.tif"), [](Pix *pix) { pixDestroy(&pix); }};
     api->SetImage(image.get());
 
     // Get OCR result
