@@ -2,26 +2,11 @@
 #include <leptonica/allheaders.h>
 #include <memory>
 #include <iostream>
+#include "util.hpp"
 
-class pix_wrapper {
-public:
-    explicit pix_wrapper(Pix *pix);
-
-    virtual ~pix_wrapper();
-
-    operator Pix *();
-
-    Pix *operator->();
-
-    // Prohibit copying and assignment.
-    pix_wrapper(const pix_wrapper &) = delete;
-
-    pix_wrapper &operator=(const pix_wrapper &) = delete;
-
-private:
-
-    Pix *pix;
-};
+template<>
+void annihilate<Pix>(Pix *ptr)
+{ pixDestroy(&ptr); }
 
 int main()
 {
@@ -34,31 +19,12 @@ int main()
     }
 
     // Open input image with leptonica library
-    pix_wrapper image{pixRead("phototest.tif")};
-    api->SetImage(image);
+    std::unique_ptr<Pix, Annihilator<Pix>> image{pixRead("phototest.tif")};
+    api->SetImage(image.get());
 
     // Get OCR result
     std::unique_ptr<char[]> outText{api->GetUTF8Text()};
     printf("OCR output:\n%s", outText.get());
 
     return 0;
-}
-
-pix_wrapper::pix_wrapper(Pix *pix) : pix(pix)
-{
-}
-
-pix_wrapper::~pix_wrapper()
-{
-    pixDestroy(&pix);
-}
-
-pix_wrapper::operator Pix *()
-{
-    return pix;
-}
-
-Pix *pix_wrapper::operator->()
-{
-    return pix;
 }
